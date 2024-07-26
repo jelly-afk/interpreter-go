@@ -57,7 +57,7 @@ func main() {
 			case "-":
 				fmt.Println("MINUS - null")
 			
-			case ":":
+			case ";":
 				fmt.Println("SEMICOLON ; null")
 			
 			}
