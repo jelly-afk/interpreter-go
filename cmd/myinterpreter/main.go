@@ -62,6 +62,11 @@ func main() {
 
 				case ";":
 					fmt.Println("SEMICOLON ; null")
+				case "=":
+					fmt.Println("EQUAL = null")
+				case "==":
+					fmt.Println("EQUAL_EQUAL == null")
+				
 				default:
 					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
 
