@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 )
@@ -31,36 +32,41 @@ func main() {
 	}
 
 	if len(fileContents) > 0 {
-		for _, c := range fileContents {
-			switch x := string(c); x {
-			case "(":
-				fmt.Println("LEFT_PAREN ( null")
-			case ")":
-				fmt.Println("RIGHT_PAREN ) null")
-			case "{":
-				fmt.Println("LEFT_BRACE { null")
-			case "}":
-				fmt.Println("RIGHT_BRACE } null")
-			
-			case ",":
-				fmt.Println("COMMA , null")
-			
-			case ".":
-				fmt.Println("DOT . null")
-			
-			case "+":
-				fmt.Println("PLUS + null")
-			
-			case "*":
-				fmt.Println("STAR * null")
-			
-			case "-":
-				fmt.Println("MINUS - null")
-			
-			case ";":
-				fmt.Println("SEMICOLON ; null")
-			// default:
+		lines := bytes.Split(fileContents, []byte("\n"))
+		for i, line := range lines {
+			for _, c := range line {
+				switch x := string(c); x {
+				case "(":
+					fmt.Println("LEFT_PAREN ( null")
+				case ")":
+					fmt.Println("RIGHT_PAREN ) null")
+				case "{":
+					fmt.Println("LEFT_BRACE { null")
+				case "}":
+					fmt.Println("RIGHT_BRACE } null")
 
+				case ",":
+					fmt.Println("COMMA , null")
+
+				case ".":
+					fmt.Println("DOT . null")
+
+				case "+":
+					fmt.Println("PLUS + null")
+
+				case "*":
+					fmt.Println("STAR * null")
+
+				case "-":
+					fmt.Println("MINUS - null")
+
+				case ";":
+					fmt.Println("SEMICOLON ; null")
+				default:
+					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
+
+					defer os.Exit(65)
+				}
 			}
 		}
 		fmt.Println("EOF  null")
