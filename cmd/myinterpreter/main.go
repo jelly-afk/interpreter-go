@@ -59,7 +59,8 @@ func main() {
 			
 			case ";":
 				fmt.Println("SEMICOLON ; null")
-			
+			// default:
+
 			}
 		}
 		fmt.Println("EOF  null")
