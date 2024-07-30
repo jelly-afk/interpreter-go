@@ -70,6 +70,13 @@ func main() {
 					} else {
 						fmt.Println("EQUAL = null")
 					}
+				case "!":
+					if n < len(line)-1 && line[n+1] == byte('='){
+						fmt.Println("BANG_EQUAL != null")
+						n += 1
+					} else {
+						fmt.Println("BANG ! null")
+					}
 
 				default:
 					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
