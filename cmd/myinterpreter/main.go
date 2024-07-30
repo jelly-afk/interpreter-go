@@ -98,6 +98,27 @@ func main() {
 					} else {
 						fmt.Println("SLASH / null")
 					}
+				case "\"":
+					sComp := false
+					for j := n + 1; j < len(line); j++ {
+
+						if line[j] == byte('"') {
+							fmt.Printf("STRING \"%s\" %s\n", string(line[n+1:j]), string(line[n+1:j]))
+							n = j
+							sComp = true
+							break
+						}
+						
+
+					}
+					if !sComp {
+						fmt.Fprintf(os.Stderr, "[line %d] Error: Unterminated string.\n", i+1)
+						defer os.Exit(65)
+						break lineLoop
+						
+					}
+					
+
 				case "	":
 				case " ":
 
