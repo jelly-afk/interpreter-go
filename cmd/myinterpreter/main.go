@@ -35,6 +35,7 @@ func main() {
 		lines := bytes.Split(fileContents, []byte("\n"))
 		for i, line := range lines {
 			n := 0
+		lineLoop:
 			for n < len(line) {
 				switch x := string(line[n]); x {
 				case "(":
@@ -91,6 +92,13 @@ func main() {
 					} else {
 						fmt.Println("GREATER > null")
 					}
+				case "/":
+					if n < len(line)-1 && line[n+1] == byte('/') {
+						break lineLoop;
+					} else {
+						fmt.Println("SLASH / null")
+					}
+
 
 				default:
 					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
