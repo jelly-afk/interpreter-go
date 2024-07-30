@@ -94,11 +94,12 @@ func main() {
 					}
 				case "/":
 					if n < len(line)-1 && line[n+1] == byte('/') {
-						break lineLoop;
+						break lineLoop
 					} else {
 						fmt.Println("SLASH / null")
 					}
-
+				case "	":
+				case " ":
 
 				default:
 					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
