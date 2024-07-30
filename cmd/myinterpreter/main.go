@@ -34,8 +34,9 @@ func main() {
 	if len(fileContents) > 0 {
 		lines := bytes.Split(fileContents, []byte("\n"))
 		for i, line := range lines {
-			for _, c := range line {
-				switch x := string(c); x {
+			n := 0
+			for n < len(line) {
+				switch x := string(line[n]); x {
 				case "(":
 					fmt.Println("LEFT_PAREN ( null")
 				case ")":
@@ -63,17 +64,24 @@ func main() {
 				case ";":
 					fmt.Println("SEMICOLON ; null")
 				case "=":
-					fmt.Println("EQUAL = null")
-				case "==":
-					fmt.Println("EQUAL_EQUAL == null")
-				
+					if n < len(line)-1 && line[n+1] == byte('='){
+						fmt.Println("EQUAL_EQUAL == null")
+						n += 1
+					} else {
+						fmt.Println("EQUAL = null")
+					}
+
 				default:
 					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
 
 					defer os.Exit(65)
+
 				}
+				n += 1
 			}
+
 		}
+
 		fmt.Println("EOF  null")
 	} else {
 		fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
