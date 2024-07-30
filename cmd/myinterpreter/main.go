@@ -64,18 +64,32 @@ func main() {
 				case ";":
 					fmt.Println("SEMICOLON ; null")
 				case "=":
-					if n < len(line)-1 && line[n+1] == byte('='){
+					if n < len(line)-1 && line[n+1] == byte('=') {
 						fmt.Println("EQUAL_EQUAL == null")
 						n += 1
 					} else {
 						fmt.Println("EQUAL = null")
 					}
 				case "!":
-					if n < len(line)-1 && line[n+1] == byte('='){
+					if n < len(line)-1 && line[n+1] == byte('=') {
 						fmt.Println("BANG_EQUAL != null")
 						n += 1
 					} else {
 						fmt.Println("BANG ! null")
+					}
+				case "<":
+					if n < len(line)-1 && line[n+1] == byte('=') {
+						fmt.Println("LESS_EQUAL <= null")
+						n += 1
+					} else {
+						fmt.Println("LESS < null")
+					}
+				case ">":
+					if n < len(line)-1 && line[n+1] == byte('=') {
+						fmt.Println("GREATER_EQUAL >= null")
+						n += 1
+					} else {
+						fmt.Println("GREATER > null")
 					}
 
 				default:
