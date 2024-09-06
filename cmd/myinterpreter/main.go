@@ -3,7 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"os"
+	"strconv"
+	"strings"
+	"unicode"
 )
 
 func main() {
@@ -37,68 +41,67 @@ func main() {
 			n := 0
 		lineLoop:
 			for n < len(line) {
-				switch x := string(line[n]); x {
-				case "(":
+				switch x := string(line[n]); {
+				case x == "(":
 					fmt.Println("LEFT_PAREN ( null")
-				case ")":
+				case x == ")":
 					fmt.Println("RIGHT_PAREN ) null")
-				case "{":
+				case x == "{":
 					fmt.Println("LEFT_BRACE { null")
-				case "}":
+				case x == "}":
 					fmt.Println("RIGHT_BRACE } null")
 
-				case ",":
+				case x == ",":
 					fmt.Println("COMMA , null")
 
-				case ".":
+				case x == ".":
 					fmt.Println("DOT . null")
 
-				case "+":
+				case x == "+":
 					fmt.Println("PLUS + null")
 
-				case "*":
+				case x == "*":
 					fmt.Println("STAR * null")
 
-				case "-":
+				case x == "-":
 					fmt.Println("MINUS - null")
-
-				case ";":
+				case x == ";":
 					fmt.Println("SEMICOLON ; null")
-				case "=":
+				case x == "=":
 					if n < len(line)-1 && line[n+1] == byte('=') {
 						fmt.Println("EQUAL_EQUAL == null")
 						n += 1
 					} else {
 						fmt.Println("EQUAL = null")
 					}
-				case "!":
+				case x == "!":
 					if n < len(line)-1 && line[n+1] == byte('=') {
 						fmt.Println("BANG_EQUAL != null")
 						n += 1
 					} else {
 						fmt.Println("BANG ! null")
 					}
-				case "<":
+				case x == "<":
 					if n < len(line)-1 && line[n+1] == byte('=') {
 						fmt.Println("LESS_EQUAL <= null")
 						n += 1
 					} else {
 						fmt.Println("LESS < null")
 					}
-				case ">":
+				case x == ">":
 					if n < len(line)-1 && line[n+1] == byte('=') {
 						fmt.Println("GREATER_EQUAL >= null")
 						n += 1
 					} else {
 						fmt.Println("GREATER > null")
 					}
-				case "/":
+				case x == "/":
 					if n < len(line)-1 && line[n+1] == byte('/') {
 						break lineLoop
 					} else {
 						fmt.Println("SLASH / null")
 					}
-				case "\"":
+				case x == "\"":
 					sComp := false
 					for j := n + 1; j < len(line); j++ {
 
@@ -108,19 +111,26 @@ func main() {
 							sComp = true
 							break
 						}
-						
 
 					}
 					if !sComp {
 						fmt.Fprintf(os.Stderr, "[line %d] Error: Unterminated string.\n", i+1)
 						defer os.Exit(65)
 						break lineLoop
-						
-					}
-					
 
-				case "	":
-				case " ":
+					}
+				case unicode.IsDigit(rune(x[0])):
+					j := n
+					for j < len(line) {
+						if !unicode.IsDigit(rune(line[j])) && string(line[j]) != "." {
+							break
+						}
+						j++
+					}
+					val := string(line[n:j])
+					fmt.Printf("NUMBER %s %s\n", val, formatNumber(val))
+					n = j-1
+				case x == " " || x == "\t":
 
 				default:
 					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
@@ -137,4 +147,16 @@ func main() {
 	} else {
 		fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
 	}
+}
+
+func formatNumber(s string) string {
+	floatVal, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if strings.Contains(s, ".") {
+		return strings.TrimRight(s, "0")
+	}
+	return fmt.Sprintf("%.1f", floatVal)
+
 }
