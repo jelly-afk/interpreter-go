@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"unicode"
 )
 
@@ -133,32 +134,35 @@ operators := map[string]string{
 						defer os.Exit(65)
 						break lineLoop
 
-					}
-				case unicode.IsDigit(rune(x[0])):
-					j := n
-					for j < len(line) {
-						if !unicode.IsDigit(rune(line[j])) && string(line[j]) != "." {
-							break
-						}
-						j++
-					}
-					val := string(line[n:j])
-					fmt.Printf("NUMBER %s %s\n", val, formatNumber(val))
-					n = j-1
-				case x == " " || x == "\t":
-
-                default:
+                    }
+                case unicode.IsDigit(rune(x[0])):
                     j := n
-                    for j < len(line) && string(line[j]) != " " && operators[string(line[j])] == "" {
+                    for j < len(line) {
+                        if !unicode.IsDigit(rune(line[j])) && string(line[j]) != "." {
+                            break
+                        }
+                        j++
+                    }
+                    val := string(line[n:j])
+                    fmt.Printf("NUMBER %s %s\n", val, formatNumber(val))
+                    n = j-1
+                case x == " " || x == "\t":
+                case unicode.IsLetter(rune(x[0])) || x == "_":
+                    j := n
+                    for j < len(line) && ( unicode.IsNumber(rune(line[j])) || unicode.IsLetter(rune(line[j])) || string(line[j]) == "_")&& operators[string(line[j])] == "" {
                         j++
                     }
 
 
                         fmt.Printf("IDENTIFIER %s null\n", line[n:j])
                     n = j-1
-                //fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
 
-					//defer os.Exit(65)
+
+
+                default:
+                                  fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
+
+					defer os.Exit(65)
 
 				}
 				n += 1
@@ -177,6 +181,12 @@ func formatNumber(s string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
+    if strings.Contains(s, "."){
+        temp := strings.TrimRight(s, "0")
+        if string(temp[len(temp)-1]) != "."{
+            return temp
+        }
+    }
 	return fmt.Sprintf("%.1f", floatVal)
 
 }
