@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"unicode"
 )
 
@@ -132,10 +131,18 @@ func main() {
 					n = j-1
 				case x == " " || x == "\t":
 
-				default:
-					fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
+                default:
+                    j := n
+                    for j < len(line) && string(line[j]) != " " {
+                        j++
+                    }
 
-					defer os.Exit(65)
+
+                        fmt.Printf("IDENTIFIER %s null\n", line[n:j])
+                    n = j-1
+                //fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %s\n", i+1, x)
+
+					//defer os.Exit(65)
 
 				}
 				n += 1
@@ -153,9 +160,6 @@ func formatNumber(s string) string {
 	floatVal, err := strconv.ParseFloat(s, 64)
 	if err != nil {
 		log.Fatal(err)
-	}
-	if strings.Contains(s, ".") {
-		return strings.TrimRight(s, "0")
 	}
 	return fmt.Sprintf("%.1f", floatVal)
 
