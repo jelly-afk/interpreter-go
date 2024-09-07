@@ -33,7 +33,23 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
 		os.Exit(1)
 	}
-
+   
+operators := map[string]string{
+    "+":  "PLUS",
+    "-":  "MINUS",
+    "*":  "MULTIPLY",
+    "/":  "DIVIDE",
+    "%":  "MODULO",
+    "=":  "ASSIGN",
+    "==": "EQUAL",
+    "!=": "NOT_EQUAL",
+    ">":  "GREATER_THAN",
+    "<":  "LESS_THAN",
+    "(":  "LEFT_PAREN",
+    ")":  "RIGHT_PAREN",
+    "[":  "LEFT_BRACKET",
+    "]":  "RIGHT_BRACKET",
+}
 	if len(fileContents) > 0 {
 		lines := bytes.Split(fileContents, []byte("\n"))
 		for i, line := range lines {
@@ -133,7 +149,7 @@ func main() {
 
                 default:
                     j := n
-                    for j < len(line) && string(line[j]) != " " {
+                    for j < len(line) && string(line[j]) != " " && operators[string(line[j])] == "" {
                         j++
                     }
 
