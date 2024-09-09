@@ -179,7 +179,12 @@ func main() {
     case "parse":
         words := bytes.Split(fileContents, []byte(" "))
         for _, w := range words {
-            fmt.Println(string(w))
+            if unicode.IsDigit(rune(w[0])){
+                fmt.Println(formatNumber(string(w)))
+            } else {
+
+                fmt.Println(string(w))
+            }
         }
 
     }
