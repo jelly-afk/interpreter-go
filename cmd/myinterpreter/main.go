@@ -179,9 +179,16 @@ func main() {
     case "parse":
         lines := bytes.Split(fileContents, []byte("\n"))
         for _, line := range  lines{
+            paren := 0
             n := 0
             for n < len(line) {
                 switch x := string(line[n]); {
+                case x == "(":
+                    paren++
+                    fmt.Print("(group ")
+                case x == ")":
+                    paren--
+                    fmt.Print(")")
                 case unicode.IsDigit(rune(x[0])):
                     j := n
                     for j < len(line) {
@@ -191,13 +198,25 @@ func main() {
                         j++
                     }
                     val := string(line[n:j])
-                    fmt.Println(formatNumber(val))
+                    if paren > 0 {
+
+                        fmt.Print(formatNumber(val))
+                    } else {
+
+                        fmt.Println(formatNumber(val))
+                    }
                     n = j-1
                 case x == "\"":
                     for j := n + 1; j < len(line); j++ {
 
 						if line[j] == byte('"') {
+                            if paren > 0 {
+
+							fmt.Print(string(line[n+1:j]))
+                            } else {
+
 							fmt.Println(string(line[n+1:j]))
+                            }
 							n = j
 							break
 						}
@@ -211,8 +230,13 @@ func main() {
                         }
                         j++
                     }
+                    if paren > 0 {
+
+                    fmt.Print(string(line[n:j]))
+                    } else {
+
                     fmt.Println(string(line[n:j]))
-                
+                    }
                     n = j
 
 
