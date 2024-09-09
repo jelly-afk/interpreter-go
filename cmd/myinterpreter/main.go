@@ -35,91 +35,85 @@ func main() {
 		os.Exit(1)
 	}
    
-operators := map[string]string{
-    "+":  "PLUS",
-    "-":  "MINUS",
-    "*":  "MULTIPLY",
-    "/":  "DIVIDE",
-    "%":  "MODULO",
-    "=":  "ASSIGN",
-    "==": "EQUAL",
-    "!=": "NOT_EQUAL",
-    ">":  "GREATER_THAN",
-    "<":  "LESS_THAN",
-    "(":  "LEFT_PAREN",
-    ")":  "RIGHT_PAREN",
-    "[":  "LEFT_BRACKET",
-    "]":  "RIGHT_BRACKET",
-}
-	if len(fileContents) > 0 {
-		lines := bytes.Split(fileContents, []byte("\n"))
-		for i, line := range lines {
-			n := 0
-		lineLoop:
-			for n < len(line) {
-				switch x := string(line[n]); {
-				case x == "(":
-					fmt.Println("LEFT_PAREN ( null")
-				case x == ")":
-					fmt.Println("RIGHT_PAREN ) null")
-				case x == "{":
-					fmt.Println("LEFT_BRACE { null")
-				case x == "}":
-					fmt.Println("RIGHT_BRACE } null")
-
-				case x == ",":
-					fmt.Println("COMMA , null")
-
-				case x == ".":
-					fmt.Println("DOT . null")
-
-				case x == "+":
-					fmt.Println("PLUS + null")
-
-				case x == "*":
-					fmt.Println("STAR * null")
-
-				case x == "-":
-					fmt.Println("MINUS - null")
-				case x == ";":
-					fmt.Println("SEMICOLON ; null")
-				case x == "=":
-					if n < len(line)-1 && line[n+1] == byte('=') {
-						fmt.Println("EQUAL_EQUAL == null")
-						n += 1
-					} else {
-						fmt.Println("EQUAL = null")
-					}
-				case x == "!":
-					if n < len(line)-1 && line[n+1] == byte('=') {
-						fmt.Println("BANG_EQUAL != null")
-						n += 1
-					} else {
-						fmt.Println("BANG ! null")
-					}
-				case x == "<":
-					if n < len(line)-1 && line[n+1] == byte('=') {
-						fmt.Println("LESS_EQUAL <= null")
-						n += 1
-					} else {
-						fmt.Println("LESS < null")
-					}
-				case x == ">":
-					if n < len(line)-1 && line[n+1] == byte('=') {
-						fmt.Println("GREATER_EQUAL >= null")
-						n += 1
-					} else {
-						fmt.Println("GREATER > null")
-					}
-				case x == "/":
-					if n < len(line)-1 && line[n+1] == byte('/') {
-						break lineLoop
-					} else {
-						fmt.Println("SLASH / null")
-					}
-				case x == "\"":
-					sComp := false
-					for j := n + 1; j < len(line); j++ {
+    operators := map[string]string{
+        "+":  "PLUS",
+        "-":  "MINUS",
+        "*":  "STAR",
+        "(":  "LEFT_PAREN",
+        ")":  "RIGHT_PAREN",
+        "[":  "LEFT_BRACKET",
+        "]":  "RIGHT_BRACKET",
+        "{": "LEFT_BRACE",
+        "}": "RIGHT_BRACE",
+        ".": "DOT",
+        ",": "COMMA",
+        ":": "COLON",
+        ";": "SEMICOLON",
+    }
+    reserved := map[string]string{
+        "and": "AND",
+        "class": "CLASS",
+        "else": "ELSE",
+        "for": "FOR",
+        "fun": "FUN",
+        "if": "IF",
+        "nil": "NIL",
+        "or": "OR",
+        "print": "PRINT",
+        "return": "RETURN",
+        "super": "SUPER",
+        "this":"THIS",
+        "true": "TRUE",
+        "false": "FALSE",
+        "var": "VAR",
+        "while": "WHILE",
+    }
+    if len(fileContents) > 0 {
+        lines := bytes.Split(fileContents, []byte("\n"))
+        for i, line := range lines {
+            n := 0
+            lineLoop:
+            for n < len(line) {
+                switch x := string(line[n]); {
+                case operators[x] != "":
+                    fmt.Printf("%s %s null\n", operators[x], x,)
+                case x == "=":
+                    if n < len(line)-1 && line[n+1] == byte('=') {
+                        fmt.Println("EQUAL_EQUAL == null")
+                        n += 1
+                    } else {
+                        fmt.Println("EQUAL = null")
+                    }
+                case x == "!":
+                    if n < len(line)-1 && line[n+1] == byte('=') {
+                        fmt.Println("BANG_EQUAL != null")
+                        n += 1
+                    } else {
+                        fmt.Println("BANG ! null")
+                    }
+                case x == "<":
+                    if n < len(line)-1 && line[n+1] == byte('=') {
+                        fmt.Println("LESS_EQUAL <= null")
+                        n += 1
+                    } else {
+                        fmt.Println("LESS < null")
+                    }
+                case x == ">":
+                    if n < len(line)-1 && line[n+1] == byte('=') {
+                        fmt.Println("GREATER_EQUAL >= null")
+                        n += 1
+                    } 		else {
+                        fmt.Println("GREATER > null")
+                    }
+                case x == "/":
+                    if n < len(line)-1 && line[n+1] == byte('/') {
+                        break lineLoop
+                    } else {
+                        fmt.Println("SLASH / null")
+                    }
+                case x == "\"":
+                    sComp := false
+                    for j := n + 1; j < len(line); j++ {
 
 						if line[j] == byte('"') {
 							fmt.Printf("STRING \"%s\" %s\n", string(line[n+1:j]), string(line[n+1:j]))
@@ -152,9 +146,14 @@ operators := map[string]string{
                     for j < len(line) && ( unicode.IsNumber(rune(line[j])) || unicode.IsLetter(rune(line[j])) || string(line[j]) == "_")&& operators[string(line[j])] == "" {
                         j++
                     }
-
-
+                    if reserved[string(line[n:j])] != ""{
+                        fmt.Printf("%s %s null\n", reserved[string(line[n:j])], line[n:j])
+                    } else {
                         fmt.Printf("IDENTIFIER %s null\n", line[n:j])
+
+                    }
+                    
+
                     n = j-1
 
 
