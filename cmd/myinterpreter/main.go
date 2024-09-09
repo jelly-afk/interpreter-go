@@ -177,19 +177,55 @@ func main() {
             fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
         }
     case "parse":
-        words := bytes.Split(fileContents, []byte(" "))
-        for _, w := range words {
-            if unicode.IsDigit(rune(w[0])){
-                fmt.Println(formatNumber(string(w)))
-            } else {
+        lines := bytes.Split(fileContents, []byte("\n"))
+        for _, line := range  lines{
+            n := 0
+            for n < len(line) {
+                switch x := string(line[n]); {
+                case unicode.IsDigit(rune(x[0])):
+                    j := n
+                    for j < len(line) {
+                        if !unicode.IsDigit(rune(line[j])) && string(line[j]) != "." {
+                            break
+                        }
+                        j++
+                    }
+                    val := string(line[n:j])
+                    fmt.Println(formatNumber(val))
+                    n = j-1
+                case x == "\"":
+                    for j := n + 1; j < len(line); j++ {
 
-                fmt.Println(string(w))
+						if line[j] == byte('"') {
+							fmt.Println(string(line[n+1:j]))
+							n = j
+							break
+						}
+
+					}
+             case unicode.IsLetter(rune(x[0])):
+                    j := n
+                    for j < len(line){
+                        if string(line[j]) == " "{
+                            break
+                        }
+                        j++
+                    }
+                    fmt.Println(string(line[n:j]))
+                
+                    n = j
+
+
+
+                }
+                n++
             }
+
         }
 
-    }
-
+    }   
 }
+
 
 func formatNumber(s string) string {
 	floatVal, err := strconv.ParseFloat(s, 64)
