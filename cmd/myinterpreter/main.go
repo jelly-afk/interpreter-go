@@ -21,10 +21,10 @@ func main() {
 
 	command := os.Args[1]
 
-	if command != "tokenize" {
-		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", command)
-		os.Exit(1)
-	}
+	//if command != "tokenize" {
+	//	fmt.Fprintf(os.Stderr, "Unknown command: %s\n", command)
+	//	os.Exit(1)
+	//}
 
 	// Uncomment this block to pass the first stage
 	//
@@ -34,6 +34,9 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
 		os.Exit(1)
 	}
+    switch command {
+    case "tokenize":
+     
    
     operators := map[string]string{
         "+":  "PLUS",
@@ -169,10 +172,18 @@ func main() {
 
 		}
 
-		fmt.Println("EOF  null")
-	} else {
-		fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
-	}
+            fmt.Println("EOF  null")
+        } else {
+            fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
+        }
+    case "parse":
+        words := bytes.Split(fileContents, []byte(" "))
+        for _, w := range words {
+            fmt.Println(string(w))
+        }
+
+    }
+
 }
 
 func formatNumber(s string) string {
